@@ -110,6 +110,98 @@ return json("ok");
 
 //    分类
     public  function  cate(){
+        $arr =array();
+        //$res =db::table("cate")->where("status","1")->select();
+        $fcate =db::table("cate")->where("status","1")->where("fid","0")->select();
+        foreach ($fcate as $key =>$v){
+            array_push($arr,$v);
+            $res1 =db::table("cate")->where("fid",$v['cid'])->where("status","1")->select();
+            foreach ($res1 as $key =>$v1){
+                array_push($arr,$v1);
+            }
+        }
+        $this->assign("cate",$arr);
+        return $this->fetch();
+    }
+    //添加页面
+    public  function  cateadd(){
+        return $this->fetch();
+    }
+    //添加操作
+    public  function  addcate($cname,$img="",$fid=0){
+        $res = db::table("cate")->insert([
+            "cname"=>$cname,
+            "img"=>$img,
+            "fid"=>$fid,
+            "status"=>1
+        ]);
+        if($res){
+            return json("ok");
+        }else{
+            return json("error");
+        }
+    }
+
+    //删除操作
+    public  function  delcate($cid){
+       $res = db::table("cate")->where("cid",$cid)->update([
+            "status"=>0
+        ]);
+       if($res){
+            return json("ok");
+       }else{
+       return json("error");
+       }
+    }
+    //添加子分类
+    public  function  catee(){
+        $id =input("id");
+        $this->assign("id",$id);
+        return $this->fetch();
+    }
+    //添加子分类
+    public function  soncate($cname,$fid,$img=""){
+      $res =db::table("cate")->insert([
+            "fid"=>$fid,
+            "img"=>$img,
+            "cname"=>$cname,
+          "status"=>1
+        ]);
+        if($res){
+            return json("ok");
+        }else{
+            return json("error");
+        }
+    }
+
+    //分类修改
+    public  function  cateedit($id){
+        $this->assign("id",$id);
+
+        return $this->fetch();
+    }
+//    待处理订单列表
+    public  function  orderList(){
+      $list= db::table("order")->paginate(10);
+      $this->assign("list",$list);
+      return $this->view->fetch();
+    }
+
+//    public  function  orderList1(){
+//        return $this->view->fetch();
+//    }
+//    待确认订单列表
+    public  function  orderList2(){
+        return $this->view->fetch();
+    }
+
+    public  function  showorder($id){
+        return $this->view->fetch();
+    }
+    public  function  shopList(){
+        return $this->view->fetch();
+    }
+    public  function  shopAdd(){
         return $this->view->fetch();
     }
 }
