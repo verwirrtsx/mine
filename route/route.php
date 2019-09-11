@@ -35,7 +35,24 @@ Route::rule('order_list2', 'index/orderList2');
 Route::rule('showorder', 'index/showorder');
 Route::rule('shop_list', 'index/shopList');
 Route::rule('shop_add', 'index/shopAdd');
+Route::rule('shop_list1', 'index/shopList1');
+Route::post('uploadimg', 'doit/uploadimg');
+Route::post('addshop', 'doit/addshop');
+Route::post('outshop', 'doit/outshop');
+Route::post('inshop', 'doit/inshop');
+Route::rule('shop_edit', 'index/shopEdit');
+Route::rule('banner_list', 'index/bannerList');
+Route::rule('banner_add', 'index/bannerAdd');
+Route::rule('banner', 'doit/banner');
+Route::rule('addbanner', 'doit/addbanner');
+Route::post('delBanner', 'doit/delBanner');
 
+
+
+//api
+Route::get('getbanner', 'api/get/getbanner');
+Route::get('getshop', 'api/get/getshop');
+Route::rule('api', 'api/index/index');
 return [
 
 ];

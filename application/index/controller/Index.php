@@ -129,6 +129,7 @@ return json("ok");
     }
     //添加操作
     public  function  addcate($cname,$img="",$fid=0){
+        $img= str_replace("\\","/",$img);
         $res = db::table("cate")->insert([
             "cname"=>$cname,
             "img"=>$img,
@@ -182,7 +183,8 @@ return json("ok");
     }
 //    待处理订单列表
     public  function  orderList(){
-      $list= db::table("order")->paginate(10);
+      $list= db::table("order")
+          ->paginate(10);
       $this->assign("list",$list);
       return $this->view->fetch();
     }
@@ -198,10 +200,44 @@ return json("ok");
     public  function  showorder($id){
         return $this->view->fetch();
     }
+//    商品列表
     public  function  shopList(){
-        return $this->view->fetch();
+$shop=db::table("shop")
+    ->where("status",1)
+    ->paginate(10);
+        $this->assign("shop",$shop);
+       return $this->view->fetch();
     }
+//    商品添加
     public  function  shopAdd(){
         return $this->view->fetch();
     }
+    //    商品列表1
+    public  function  shopList1(){
+        $shop=db::table("shop")
+            ->where("status",0)
+            ->paginate(10);
+        $this->assign("shop",$shop);
+        return $this->view->fetch();
+    }
+
+    //商品修改
+    public  function shopEdit($sid){
+
+        $this->assign("sid",$sid);
+        return $this->fetch();
+    }
+
+//    轮播列表
+    public  function  bannerList(){
+        $ban=  db::table("banner")->where("status",1)->paginate(10);
+        $this->assign("bann",$ban);
+        return $this->fetch();
+    }
+    //轮播添加
+    public  function  bannerAdd(){
+
+        return $this->fetch();
+    }
+
 }

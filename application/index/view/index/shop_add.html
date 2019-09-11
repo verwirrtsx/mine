@@ -24,6 +24,13 @@
   	.lef{
   		margin-left: 50px;
   	}
+	.imgwitdh{
+		width: 50px;
+		height: 50px;
+	}
+	.weiyi{
+		mar
+	}
   </style>
   <body>
     <div class="x-body">
@@ -43,44 +50,66 @@
           </div>
 		  
 		  <div class="layui-form-item">
-		      <label for="sname" class="layui-form-label">
-		          <span class="x-red">*</span>商品名
+		      <label for="price" class="layui-form-label">
+		          <span class="x-red">*</span>商品单价
 		      </label>
 		      
 		      <div class="layui-input-inline">
-		          <input type="text" id="sname" name="sname"
+		          <input type="text" id="price" name="price"
 		          autocomplete="off" class="layui-input">
 		      </div>
 		      <div class="layui-form-mid layui-word-aux">
-		          <span class="x-red">*</span>输入商品名
+		          <span class="x-red">*</span>输入商品单价
 		      </div>
 		  </div>
 		  
 		  <div class="layui-form-item">
-		      <label for="sname" class="layui-form-label">
-		          <span class="x-red">*</span>商品名
+		      <label for="oprice" class="layui-form-label">
+		          <span class="x-red">*</span>商品原价
 		      </label>
 		      
 		      <div class="layui-input-inline">
-		          <input type="text" id="sname" name="sname"
+		          <input type="text" id="oprice" name="oprice"
 		          autocomplete="off" class="layui-input">
 		      </div>
 		      <div class="layui-form-mid layui-word-aux">
-		          <span class="x-red">*</span>输入商品名
+		          <span class="x-red">*</span>输入商品原价
 		      </div>
 		  </div>
 		  
-          
-				<div class="layui-upload lef">
-				  <button type="button" class="layui-btn" id="test1">上传图片</button>
-				  <div class="layui-upload-list">
-				    <img class="layui-upload-img" id="demo1" width="80px">
-				    <p id="demoText"></p>
-				  </div>
-				</div>   
-        
+		  
+		<div class="layui-form-item">
+		    <label for="less" class="layui-form-label">
+		        <span class="x-red">*</span>商品库存
+		    </label>
+		    
+		    <div class="layui-input-inline">
+		        <input type="text" id="less" name="less"
+		        autocomplete="off" class="layui-input">
+		    </div>
+		    <div class="layui-form-mid layui-word-aux">
+		        <span class="x-red">*</span>商品库存
+		    </div>
+		</div>
+		
+		
+		
+         <div class="layui-form-item" > 
+		<div class="layui-upload" style="margin-top: 20px;margin-left: 45px;">
+			
+		  <button type="button" class="layui-btn" id="test2">多图片上传</button> 
+		  <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;width: 300px;">
+			预览图：
+			<div class="layui-upload-list" id="demo2"></div>
+		 </blockquote>
+		</div>
+        </div>
+		
+		
+
+		
           <div class="layui-form-item">
-              <label for="L_repass" class="layui-form-label">
+              <label for="add" class="layui-form-label">
               </label>
               <button  class="layui-btn" lay-filter="add" lay-submit="">
                   增加
@@ -94,71 +123,75 @@
           var form = layui.form
           ,layer = layui.layer
 				 ,upload = layui.upload;
-				 var img;
+				 var img=[];
 				 
-  upload.render({
-    elem: '#test1'
-    ,url: 'http://182.61.44.35/market/think/public/admin.php/deal/catepic'
+upload.render({
+    elem: '#test2'
+    ,url: 'uploadimg'
+    ,multiple: true
     ,before: function(obj){
       //预读本地文件示例，不支持ie8
       obj.preview(function(index, file, result){
-        $('#demo1').attr('src', result); //图片链接（base64）
+        $('#demo2').append('<img src="'+ result +'" alt="'+ file.name +'" class="layui-upload-img imgwitdh">')
       });
     }
     ,done: function(res){
-      //如果上传失败
-		console.log(res)
-		img =res;
-      //上传成功
+      //上传完毕
+	
+	  img.push(res);
+	   // console.log(img);
     }
-    ,error: function(){
-      //演示失败状态，并实现重传
-      var demoText = $('#demoText');
-      demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
-      demoText.find('.demo-reload').on('click', function(){
-        uploadInst.upload();
-      });
-    }
-});
+  });
   
           //监听提交
-          form.on('submit(add)', function(data){
-            console.log(data);
-            //发异步，把数据提交给php
-            
-            layui.use('jquery',function(){
-      var $=layui.$;
-      $.ajax({  
-          type: 'get',  
-          url: '/addcate', // ajax请求路径
-          data: {  
-              cname:data.field.cname,
-              img:img
-          },  
-          success: function(data){ 
-            if(data=='ok'){
-                 layer.alert("添加成功", {icon: 6},function () {
-  xadmin.close();
-
-                // 可以对父窗口进行刷新 
-                x_admin_father_reload();
-          });
-            }else if(data=='error'){
-             layer.alert("添加失败", {icon: 6},function () {
-              // 获得frame索引
-  xadmin.close();
-
-                // 可以对父窗口进行刷新 
-                x_admin_father_reload();
-          });
-            }
-          }  
-      });     
-    }); 
-            
-
-            return false;
-          });
+    form.on('submit(add)',
+    function(data) {
+		// console.log($('#sname').val())
+    $.ajax({  
+                 type: "post",  
+                 url: "addshop",  
+                 data: {
+				  img:img,
+    			  sname:$('#sname').val(),
+    			  price:$('#price').val(),
+    			  oprice:$('#oprice').val(),
+    			  less:$('#less').val()
+    			  },  
+                 dataType: "json",  
+                 success: function(data){
+    				 // console.log(data);
+    				 if(data == "ok"){
+    					layer.alert("增加成功", {
+    					    icon: 6
+    					},
+    					function() {
+    					    //关闭当前frame
+    					    xadmin.close();
+    					    // 可以对父窗口进行刷新 
+    					    xadmin.father_reload();
+    					});
+    				 }
+    				 if(data == "error"){
+    					layer.alert("增加失败", {
+    					    icon: 7
+    					},
+    					function() {
+    					    //关闭当前frame
+    					    xadmin.close();
+    					    // 可以对父窗口进行刷新 
+    					    xadmin.father_reload();
+    					});
+    				 }
+                         
+                          },  
+                 error:function(e){  
+                       // console.log(e);  
+                 }  
+             }); 
+        //发异步，把数据提交给php
+    
+        return false;
+    });
           
           
         });
